@@ -4,6 +4,6 @@ export class CreateTicketDto{
     @IsNotEmpty()
     place: string
     @IsNotEmpty()
-    price: string
+    price: number
     cartId: number
 }

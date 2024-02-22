@@ -1,5 +1,7 @@
 import { Controller, Get , Post, Body, Param, Patch, Delete} from "@nestjs/common";
 import { Prisma, User as UserModel } from "@prisma/client";
+import { map } from "rxjs";
+import { ShoppingCartService } from "src/shoppingCart/shoppingCart.service";
 import { CreateUserDto } from "./dto/createUser.dto";
 import { UpdateUserDto } from "./dto/updateUser.dto";
 import { UserService } from "./user.service";
@@ -9,10 +11,11 @@ export class UserController{
     constructor(private readonly userService: UserService){}
     
     @Post()
-    async createUsers(@Body('user') createUserDto: CreateUserDto): Promise<UserModel>{
+    async createUsers(@Body('user') createUserDto: CreateUserDto): Promise<CreateUserDto>{
         return await this.userService.createtUser(createUserDto)
         
     }
+
 
     @Get()
     async findUsers(){
@@ -30,7 +33,7 @@ export class UserController{
     }
 
     @Delete(':id')
-    async deleteCurrentUser(@Param('id') id: number): Promise<UserModel>{
+    async deleteCurrentUser(@Param('id') id: number): Promise<void>{
         return await this.userService.deleteCurrentUser(id)
     }
 }

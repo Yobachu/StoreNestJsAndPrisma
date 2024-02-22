@@ -15,4 +15,6 @@ export class TicketController{
     async findTicket(){
         return await this.ticketService.findTicket()
     }
+
+
 }

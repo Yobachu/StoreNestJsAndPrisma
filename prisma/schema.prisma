@@ -21,10 +21,10 @@ model User {
 }
 
 model ShoppingCart {
-  id     Int     @id @default(autoincrement())
-  amount Int
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+  id     Int      @id @default(autoincrement()) 
+  amount Int ?
+  user   User     @relation(fields: [userId], references: [id])
+  userId Int      @unique
   ticket Ticket[]
 
   @@map("carts")
@@ -33,7 +33,7 @@ model ShoppingCart {
 model Ticket {
   id     Int          @id @default(autoincrement())
   place  String
-  price  String
+  price  Int
   cart   ShoppingCart @relation(fields: [cartId], references: [id])
   cartId Int          @unique
 

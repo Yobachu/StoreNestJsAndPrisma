@@ -8,22 +8,37 @@ import { UpdateUserDto } from "./dto/updateUser.dto";
 export class UserService{
     constructor(private prisma: PrismaService){}
     
-    async createtUser(createUserDto: CreateUserDto): Promise<User>{
-        const user =  await this.prisma.user.create({data: createUserDto})
-        console.log(user)
-        return user
+    async createtUser(createUserDto: CreateUserDto): Promise<CreateUserDto>{
+        return await this.prisma.user.create({data: createUserDto})
     }
 
+
     async findUsers(){
-        return await this.prisma.user.findMany({include:{
-            shoppingCart: true,
-        }})
+        return await this.prisma.user.findMany({
+            include:{
+            shoppingCart: {
+                include: {
+                    ticket: true
+                },
+            }, 
+        },
+    })
     }
 
     async findCurrentUser(id: number): Promise<User>{
-        const currentUser = await this.prisma.user.findUnique({where:{
-            id: Number(id) 
-        }})
+        const currentUser = await this.prisma.user.findUnique({
+            where:{
+                id: Number(id), 
+            }, 
+            include:{
+                shoppingCart: {
+                    include: {
+                        ticket: true
+                    },
+                }, 
+            },
+        })
+        console.log(currentUser)
         return currentUser
     }
 
@@ -35,10 +50,13 @@ export class UserService{
         })
     }
 
-    async deleteCurrentUser(id: number): Promise<User>{
-        return await this.prisma.user.delete({where:{
-            id: Number(id)
-        }})
+    async deleteCurrentUser(id: number): Promise<void>{
+        await this.prisma.$transaction([
+            this.prisma.ticket.deleteMany({where: {cart:{userId: Number(id)}}}),
+            this.prisma.shoppingCart.delete({where: {userId: Number(id)}}),
+            this.prisma.user.delete({where:{
+                id: Number(id)
+            }})])
     }
 
     
