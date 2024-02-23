@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
+import { CreateShoppingCartDto } from "src/shoppingCart/dto/createShoppingCart.dto";
+import { ShoppingCartService } from "src/shoppingCart/shoppingCart.service";
 import { CreateUserDto } from "./dto/createUser.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UpdateUserDto } from "./dto/updateUser.dto";
@@ -10,14 +12,22 @@ export class UserService{
     constructor(private prisma: PrismaService){}
     
     async createtUser(createUserDto: CreateUserDto): Promise<CreateUserDto>{
-        return await this.prisma.user.create({data: createUserDto})
+        return await this.prisma.user.create({
+            data: {...createUserDto, shoppingCart:{
+                create: {
+                    amount: 0
+                }
+            }
+        }, include: {
+            shoppingCart: true}
+        })
     }
 
 
 
     async findUsers(){
-        return await this.prisma.user.findMany({
-            include:{
+        const user =  await this.prisma.user.findMany({
+            include:{ 
             shoppingCart: {
                 include: {
                     ticket: true
@@ -25,6 +35,7 @@ export class UserService{
             }, 
         },
     })
+        return user
     }
 
     async findCurrentUser(id: number): Promise<User>{

@@ -7,14 +7,14 @@ import { CreateTicketDto } from "./dto/createTicket.dto";
 export class TicketService{
     constructor(private prisma: PrismaService){}
     async createTicket(createTicketDto: CreateTicketDto): Promise<Ticket>{
-        return await this.prisma.ticket.create({
-            data: createTicketDto,
+        const ticket = await this.prisma.ticket.create({
+            data: createTicketDto, 
         })
+
+        return ticket
     }
 
     async findTicket(){
-        return await this.prisma.ticket.findMany({include:{
-            cart: true
-        }})
+        return await this.prisma.ticket.findMany()
     }
 }

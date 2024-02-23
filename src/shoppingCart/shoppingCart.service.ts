@@ -21,26 +21,28 @@ export class ShoppingCartService{
     
     }
 
-    async updateAmountFromPrice(ticketId: number): Promise<ShoppingCart> {
+    async updateAmountFromPrice(id: number, ticketId: number): Promise<ShoppingCart> {
+
+      const user = await this.prisma.user.findUnique({
+        where: {id: Number(id)},
+        include: {shoppingCart: true}
+      })
+
+      const cartId = user.shoppingCart[0].id
+
+      const ticket = await this.prisma.ticket.findMany({
+        where: { cartId },
+        select: { price: true }
+      });
     
-        const cartId = await this.prisma.ticket.findUnique({
-          where: { id: Number(ticketId) },
-          select: { cartId: true }
-        });
-    
-        const totalPrice = await this.prisma.ticket.aggregate({
-          where: { cartId: Number(cartId.cartId) },
-          _sum: { price: true }
-        });
-    
-        const totalPriceValue = totalPrice._sum.price;
-    
-        const res =  await this.prisma.shoppingCart.update({
-          where: { id: Number(cartId.cartId) },
-          data: { amount: totalPriceValue }
-        });
-        return res
-      }
+      const totalPrice = ticket.reduce((acc, ticket)=> acc + ticket.price, 0)
+
+      const res =  await this.prisma.shoppingCart.update({
+        where: { id: cartId },
+        data: { amount: totalPrice }
+      });
+      return res
+    }
 
     
 

@@ -1,7 +1,7 @@
-import { IsNegative } from "class-validator";
+import { IsNegative, IsNumber } from "class-validator";
 
 export class CreateShoppingCartDto{
     
-    amount: number
+    amount: number = 0
     userId: number
 }

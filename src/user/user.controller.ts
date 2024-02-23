@@ -1,6 +1,7 @@
 import { Controller, Get , Post, Body, Param, Patch, Delete} from "@nestjs/common";
 import { Prisma, User as UserModel } from "@prisma/client";
 import { map } from "rxjs";
+import { CreateShoppingCartDto } from "src/shoppingCart/dto/createShoppingCart.dto";
 import { ShoppingCartService } from "src/shoppingCart/shoppingCart.service";
 import { CreateUserDto } from "./dto/createUser.dto";
 import { LoginDto } from "./dto/login.dto";
@@ -9,12 +10,11 @@ import { UserService } from "./user.service";
 
 @Controller('users')
 export class UserController{
-    constructor(private readonly userService: UserService){}
+    constructor(private readonly userService: UserService , private shoppingCartService: ShoppingCartService){}
     
     @Post()
-    async createUsers(@Body('user') createUserDto: CreateUserDto): Promise<CreateUserDto>{
+    async createUsers(@Body('user') createUserDto: CreateUserDto, createShoppingCartDto: CreateShoppingCartDto): Promise<CreateUserDto>{
         return await this.userService.createtUser(createUserDto)
-        
     }
 
 

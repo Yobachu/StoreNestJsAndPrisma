@@ -19,6 +19,7 @@ export class AuthService{
             throw new HttpException('Invalid password', HttpStatus.EXPECTATION_FAILED)
         }
 
-        return {accesToken: this.jwtService.sign({userId: user.id})}
+        const JWT =  this.jwtService.sign({userId: user.id})
+        return {email, JWT}
     }
 }
