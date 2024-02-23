@@ -3,6 +3,7 @@ import { Prisma, User as UserModel } from "@prisma/client";
 import { map } from "rxjs";
 import { ShoppingCartService } from "src/shoppingCart/shoppingCart.service";
 import { CreateUserDto } from "./dto/createUser.dto";
+import { LoginDto } from "./dto/login.dto";
 import { UpdateUserDto } from "./dto/updateUser.dto";
 import { UserService } from "./user.service";
 
@@ -15,6 +16,8 @@ export class UserController{
         return await this.userService.createtUser(createUserDto)
         
     }
+
+
 
 
     @Get()
