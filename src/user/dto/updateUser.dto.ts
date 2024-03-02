@@ -1,6 +1,7 @@
+import { Exclude } from "class-transformer"
 import { IsEmail, IsNotEmpty } from "class-validator"
 
-export class UpdateUserDto{
+export class UpdateUserDto {
     @IsNotEmpty()
     @IsEmail()
     email: string

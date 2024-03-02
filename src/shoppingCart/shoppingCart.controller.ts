@@ -16,8 +16,8 @@ export class ShoppingCartController{
     }
 
     @Post('update-amount/:id')
-    async updateAmountFromPrice(@Param('id') id:number,  ticketId: number): Promise<ShoppingCart> {
-      return await this.shoppingCartService.updateAmountFromPrice(id, ticketId);
+    async updateAmountFromPrice(@Param('id') id:number): Promise<ShoppingCart> {
+      return await this.shoppingCartService.updateAmountFromPrice(id);
     }
 
 }
